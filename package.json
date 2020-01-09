@@ -1,0 +1,74 @@
+{
+	"name": "vsada",
+	"displayName": "vsADA",
+	"description": "Build ADA files using gnat",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.41.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:ada.run",
+		"onCommand:ada.clean",
+		"onCommand:ada.compile",
+		"onCommand:ada.changeGNAT",
+		"onCommand:ada.buildNrun",
+		"onLanguage:ada"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "ada.buildNrun",
+				"title": "vsada: Build, clean and run current ADA file"
+			},
+			{
+				"command": "ada.run",
+				"title": "vsada: Run current ADA file"
+			},
+			{
+				"command": "ada.clean",
+				"title": "vsada: Clean up GNAT auxiliary files."
+			},
+			{
+				"command": "ada.compile",
+				"title": "vsada: Compile ADA file"
+			},
+			{
+				"command": "ada.changeGNAT",
+				"title": "vsada: Change the path to your GNAT binary folder."
+			}
+		],
+		"configuration": {
+			"title":"vsada",
+			"properties": {
+				"vsada.GNAT-bin-path":{
+					"type":"string",
+					"default": "undefined",
+					"description":"Set the path to your GNAT binary folder."
+				}
+			}
+
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^5.2.7",
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.41.0",
+		"glob": "^7.1.5",
+		"mocha": "^6.2.2",
+		"typescript": "^3.6.4",
+		"tslint": "^5.20.0",
+		"vscode-test": "^1.2.2"
+	}
+}
