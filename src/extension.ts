@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { readdirSync } from 'fs';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -26,22 +27,23 @@ function buildAndRun() {
 function run() {
 
 	performOnAdaFile((adaFile: string) => {
-		executeExe(adaFile.slice(0, adaFile.lastIndexOf('.')).toLocaleLowerCase() + '.exe',[]);
+		executeExe(adaFile.slice(0, adaFile.lastIndexOf('.')).toLocaleLowerCase() + '.exe', []);
 	});
 }
 
 function clean() {
 	let gnatClean = getExe("gnatclean");
+
 	performOnAdaFile((adaFile: string) => {
-		executeExe(gnatClean,["-c",adaFile]);
-	});	
+		executeExe(gnatClean, ["-c", adaFile]);
+	});
 }
 
 function compile() {
 	let gnatMake = getExe("gnatmake");
 	performOnAdaFile((adaFile: string) => {
-		executeExe(gnatMake,["-B",adaFile]);
-	});	
+		executeExe(gnatMake, ["-B", adaFile]);
+	});
 }
 
 
@@ -49,14 +51,18 @@ function performOnAdaFile(f: (adaFile: string) => void) {
 	let adaFile = vscode.window.activeTextEditor?.document.fileName;
 
 	if (adaFile) {
-		f.call(undefined,adaFile);
+		f.call(undefined, adaFile);
 	} else {
 		vscode.window.showErrorMessage("No active ADA text editor.");
 	}
 }
 
-function executeExe(exe: string, options: string[]) {
-	executeProcess(new vscode.ProcessExecution(exe,options,undefined));
+function executeExe(exe: string | undefined, options: string[]) {
+	if (exe) {
+		executeProcess(new vscode.ProcessExecution(exe, options, undefined));
+	} else {
+		vscode.window.showErrorMessage("Could not execute command as the executable was not found.");
+	}
 }
 
 function executeProcess(process: vscode.ProcessExecution) {
@@ -64,9 +70,9 @@ function executeProcess(process: vscode.ProcessExecution) {
 	if (doc) {
 		let workspace = vscode.workspace.getWorkspaceFolder(doc.uri);
 		if (workspace) {
-			let name = process.process.slice(process.process.lastIndexOf('\\')+1);
-			let task = new vscode.Task({ type: "process"}, workspace, name, "source", process);
-			
+			let name = process.process.slice(process.process.lastIndexOf('\\') + 1);
+			let task = new vscode.Task({ type: "process" }, workspace, name, "vsada", process);
+
 			vscode.tasks.executeTask(task);
 		}
 	}
@@ -87,11 +93,49 @@ function change() {
 }
 
 function getExe(name: string) {
-	return `${getGNAT_bin()}\\${name}.exe`;
+	let gnat_bin = getGNAT_bin();
+	if (gnat_bin) {
+		return `${getGNAT_bin()}\\${name}.exe`;
+	}
+	return undefined;
 }
 
 function getGNAT_bin() {
-	return vscode.workspace.getConfiguration('vsada').get('GNAT-bin-path', 'error');
+	let result = retrieveGNATbin();
+
+	if (!result || result === "undefined" || !validDir(result)) {
+		let errorMessage;
+
+		if (!result || result === "undefined") {
+			errorMessage = "GNAT binary location undefined.";
+		} else {
+			errorMessage = "The directory does not contain gnatmake.exe and gnatclean.exe";
+		}
+
+		let reaction = vscode.window.showErrorMessage(errorMessage, "Change GNAT location");
+		reaction.then((choice: string | undefined) => { if (choice) { change(); } });
+		return undefined;
+	} else {
+		return result;
+	}
+
+	function retrieveGNATbin() {
+		return vscode.workspace.getConfiguration('vsada').get('GNAT-bin-path', 'error');
+	}
+
+	function validDir(dirPath: string): boolean {
+		let dir = readdirSync(dirPath);
+
+		let required = new Set(["gnatmake.exe", "gnatclean.exe"]);
+
+		for (const element of required.values()) {
+			if (!dir.includes(element)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 }
 
 // this method is called when your extension is deactivated
