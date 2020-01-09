@@ -7,6 +7,7 @@
 		"vscode": "^1.41.0"
 	},
 	"categories": [
+		"Programming Languages",
 		"Other"
 	],
 	"activationEvents": [
@@ -42,15 +43,14 @@
 			}
 		],
 		"configuration": {
-			"title":"vsada",
+			"title": "vsada",
 			"properties": {
-				"vsada.GNAT-bin-path":{
-					"type":"string",
+				"vsada.GNAT-bin-path": {
+					"type": "string",
 					"default": "undefined",
-					"description":"Set the path to your GNAT binary folder."
+					"description": "Set the path to your GNAT binary folder."
 				}
 			}
-
 		}
 	},
 	"scripts": {
@@ -67,8 +67,10 @@
 		"@types/vscode": "^1.41.0",
 		"glob": "^7.1.5",
 		"mocha": "^6.2.2",
-		"typescript": "^3.6.4",
 		"tslint": "^5.20.0",
-		"vscode-test": "^1.2.2"
+		"typescript": "^3.6.4",
+		"vscode-test": "^1.2.2",
+		"webpack": "^4.41.5",
+		"webpack-cli": "^3.3.10"
 	}
 }
