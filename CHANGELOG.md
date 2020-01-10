@@ -16,3 +16,7 @@
 
 - Fixed sequential running in build, clean and run
 - Processes in build, clean and run now share a terminal
+
+## 0.0.5
+
+- Fixed setting of work directory when not in workspace folder

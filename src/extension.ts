@@ -58,7 +58,9 @@ function performOnAdaFile(f: (adaFile: string) => Thenable<vscode.TaskExecution>
 
 function executeExe(exe: string | undefined, options: string[]) {
 	if (exe) {
-		return executeProcess(new vscode.ProcessExecution(exe, options, undefined));
+		let adaFilePath = vscode.window.activeTextEditor?.document.fileName;
+		let wd = adaFilePath?.slice(0, adaFilePath.lastIndexOf('\\'));
+		return executeProcess(new vscode.ProcessExecution(exe, options, {cwd:wd}));
 	} else {
 		vscode.window.showErrorMessage("Could not execute command as the executable was not found.");
 	}
@@ -69,6 +71,7 @@ function executeProcess(process: vscode.ProcessExecution) {
 	if (doc) {
 		let workspace = vscode.workspace.getWorkspaceFolder(doc.uri);
 		if (workspace) {
+			
 			let name = process.process.slice(process.process.lastIndexOf('\\') + 1);
 			let task = new vscode.Task({ type: "process" }, workspace, name, "vsada", process);
 
