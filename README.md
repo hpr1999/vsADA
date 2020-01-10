@@ -9,7 +9,8 @@ Also adds a command to choose the binary folder of your GNAT installation.
 
 ## Requirements
 
-An installation of GNAT. Specifically, gnatmake.exe, gnatclean.exe.
+An installation of GNAT. (<https://www.gnu.org/software/gnat/>)
+Specifically, gnatmake.exe, gnatclean.exe are used.
 You have to set the path to the binary folder in settings or use the vsada command.
 
 ## Extension Settings
@@ -26,9 +27,4 @@ Only Windows.
 ## Release Notes
 
 Users appreciate release notes as you update your extension.
-
-### 0.0.1
-
-Initial release.
-
 -----------------------------------------------------------------------------------------------------------

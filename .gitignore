@@ -5,3 +5,4 @@ vsc-extension-quickstart.md
 tslint.json
 .vscodeignore
 .vscode-test
+*.vsix
