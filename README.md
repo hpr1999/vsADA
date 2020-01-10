@@ -23,8 +23,3 @@ This extension contributes the following settings:
 ## Known Issues
 
 Only Windows.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
------------------------------------------------------------------------------------------------------------
