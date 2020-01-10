@@ -11,3 +11,8 @@
 ## 0.0.3
 
 - ReadMe Changes
+
+## 0.0.4
+
+- Fixed sequential running in build, clean and run
+- Processes in build, clean and run now share a terminal
