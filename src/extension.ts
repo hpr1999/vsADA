@@ -19,39 +19,38 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function buildAndRun() {
-	compile();
-	clean();
-	run();
+	compile()?.then(() => setTimeout(()=>clean()?.then(() => setTimeout(run,3000)),3000));
+	
 }
 
 function run() {
 
-	performOnAdaFile((adaFile: string) => {
-		executeExe(adaFile.slice(0, adaFile.lastIndexOf('.')).toLocaleLowerCase() + '.exe', []);
+	return performOnAdaFile((adaFile: string) => {
+		return executeExe(adaFile.slice(0, adaFile.lastIndexOf('.')).toLocaleLowerCase() + '.exe', []);
 	});
 }
 
 function clean() {
 	let gnatClean = getExe("gnatclean");
 
-	performOnAdaFile((adaFile: string) => {
-		executeExe(gnatClean, ["-c", adaFile]);
+	return performOnAdaFile((adaFile: string) => {
+		return executeExe(gnatClean, ["-c", adaFile]);
 	});
 }
 
 function compile() {
 	let gnatMake = getExe("gnatmake");
-	performOnAdaFile((adaFile: string) => {
-		executeExe(gnatMake, ["-B", adaFile]);
+	return performOnAdaFile((adaFile: string) => {
+		return executeExe(gnatMake, ["-B", adaFile]);
 	});
 }
 
 
-function performOnAdaFile(f: (adaFile: string) => void) {
+function performOnAdaFile(f: (adaFile: string) => Thenable<vscode.TaskExecution> | undefined) {
 	let adaFile = vscode.window.activeTextEditor?.document.fileName;
 
 	if (adaFile) {
-		f.call(undefined, adaFile);
+		return f.call(undefined, adaFile);
 	} else {
 		vscode.window.showErrorMessage("No active ADA text editor.");
 	}
@@ -59,7 +58,7 @@ function performOnAdaFile(f: (adaFile: string) => void) {
 
 function executeExe(exe: string | undefined, options: string[]) {
 	if (exe) {
-		executeProcess(new vscode.ProcessExecution(exe, options, undefined));
+		return executeProcess(new vscode.ProcessExecution(exe, options, undefined));
 	} else {
 		vscode.window.showErrorMessage("Could not execute command as the executable was not found.");
 	}
@@ -73,7 +72,8 @@ function executeProcess(process: vscode.ProcessExecution) {
 			let name = process.process.slice(process.process.lastIndexOf('\\') + 1);
 			let task = new vscode.Task({ type: "process" }, workspace, name, "vsada", process);
 
-			vscode.tasks.executeTask(task);
+			let taskExec = vscode.tasks.executeTask(task);
+			return taskExec;
 		}
 	}
 }
