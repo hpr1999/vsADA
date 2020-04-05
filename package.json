@@ -2,7 +2,7 @@
 	"name": "vsada",
 	"displayName": "vsADA",
 	"description": "Build ADA files using gnat",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"publisher": "cecidit",
 	"repository": "https://github.com/hpr1999/vsADA",
 	"engines": {
@@ -74,5 +74,8 @@
 		"vscode-test": "^1.2.2",
 		"webpack": "^4.41.5",
 		"webpack-cli": "^3.3.10"
+	},
+	"dependencies": {
+		"tsc": "^1.20150623.0"
 	}
 }

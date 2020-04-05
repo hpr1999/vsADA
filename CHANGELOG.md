@@ -20,3 +20,7 @@
 ## 0.0.5
 
 - Fixed setting of work directory when not in workspace folder
+
+## 0.0.6
+
+- Security Update
