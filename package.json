@@ -2,7 +2,7 @@
 	"name": "vsada",
 	"displayName": "vsADA",
 	"description": "Build ADA files using gnat",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"publisher": "cecidit",
 	"repository": "https://github.com/hpr1999/vsADA",
 	"engines": {
